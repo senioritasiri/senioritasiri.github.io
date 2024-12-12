@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuenta Atrás</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #fff;
+            color: #333;
+        }
+
+        .countdown {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 20px 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .time {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .time div {
+            text-align: center;
+        }
+
+        .time div span {
+            display: block;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .time div small {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown">
+        <div class="time">
+            <div>
+                <span id="days">00</span>
+                <small>Días</small>
+            </div>
+            <div>
+                <span id="hours">00</span>
+                <small>Horas</small>
+            </div>
+            <div>
+                <span id="minutes">00</span>
+                <small>Minutos</small>
+            </div>
+            <div>
+                <span id="seconds">00</span>
+                <small>Segundos</small>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateCountdown() {
+            const targetDate = new Date('December 18, 2024 23:59:00').getTime();
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+            if (timeLeft < 0) {
+                clearInterval(timer);
+                document.querySelector('.countdown').innerHTML = '<h1>¡El momento ha llegado!</h1>';
+            }
+        }
+
+        updateCountdown(); // Llama a la función al cargar la página
+        const timer = setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
