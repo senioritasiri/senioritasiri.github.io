@@ -1,0 +1,45 @@
+name: Generar Imagen del Temporizador
+
+on:
+  schedule:
+    # Ejecuta el workflow cada hora
+    - cron: "5 * * * *"
+
+jobs:
+  generate-timer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: "16"
+
+    - name: Instalar Puppeteer
+      run: npm install puppeteer
+
+    - name: Generar la imagen
+      run: |
+        node <<EOF
+        const puppeteer = require('puppeteer');
+        const fs = require('fs');
+        (async () => {
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            await page.goto('https://senioritasiri.github.io/');
+            await page.setViewport({ width: 600, height: 200, deviceScaleFactor: 2 });
+            await page.screenshot({ path: 'countdown.png' });
+            await browser.close();
+        })();
+        EOF
+
+    - name: Subir la imagen al repositorio
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add countdown.png
+        git commit -m "Actualización de imagen del temporizador"
+        git push
